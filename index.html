@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <meta name="description" content="Visual explainers for machine learning. Every model trains live in the browser: change the data, turn a knob, watch it learn." />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Interactive ML · Interactive Machine Learning</title>
+    <link rel="canonical" href="__MLX_SITE__" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Interactive ML" />
+    <meta property="og:title" content="Interactive ML · Interactive Machine Learning" />
+    <meta property="og:description" content="Visual explainers for machine learning. Every model trains live in the browser: change the data, turn a knob, watch it learn." />
+    <meta property="og:url" content="__MLX_SITE__" />
+    <meta property="og:image" content="__MLX_SITE__og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Interactive ML · Interactive Machine Learning" />
+    <meta name="twitter:description" content="Visual explainers for machine learning. Every model trains live in the browser: change the data, turn a knob, watch it learn." />
+    <meta name="twitter:image" content="__MLX_SITE__og.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Apply the stored theme before first paint.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('mlx-theme');
+        } catch (e) {}
+        var theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        var meta = document.querySelector('meta[name=theme-color]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b0b0b' : '#ffffff');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Interactive ML needs JavaScript enabled. The visualisations run entirely in your browser.</noscript>
+
+    <!-- The studio frame: painted on a deep link before React runs, and by the router while the chunk loads. -->
+    <template id="mlx-skeleton">
+      <div class="mlx-header" aria-hidden="true"></div>
+      <main class="mlx-main">
+        <div class="mlx-studio-page mlx-skeleton">
+          <section class="mlx-studio" data-wide="">
+            <header class="mlx-band mlx-studio__head"><span class="mlx-skeleton__bar"></span></header>
+            <div class="mlx-studio__bar">
+              <span class="mlx-skeleton__bar"></span>
+              <span class="mlx-skeleton__bar"></span>
+              <span class="mlx-skeleton__bar"></span>
+            </div>
+            <div class="mlx-studio__body">
+              <aside class="mlx-studio__rail"><div class="mlx-skeleton__block"></div></aside>
+              <div class="mlx-studio__stage"><div class="mlx-skeleton__block"></div></div>
+              <aside class="mlx-studio__out"><div class="mlx-skeleton__block"></div></aside>
+            </div>
+          </section>
+        </div>
+      </main>
+    </template>
+
+    <script>
+      // A deep link paints the frame and starts its chunk and fonts before the app boots.
+      (function () {
+        var target = window.location.pathname;
+        try {
+          target = sessionStorage.getItem('mlx-redirect') || target;
+        } catch (e) {}
+        var match = /\/explainer\/([^/?#]+)/.exec(target);
+        if (!match) return;
+        var template = document.getElementById('mlx-skeleton');
+        var root = document.getElementById('root');
+        if (template && root && 'content' in template) root.appendChild(template.content.cloneNode(true));
+        var preload = __MLX_PRELOAD__;
+        if (!preload || !preload.chunks[match[1]]) return;
+        var head = document.head;
+        preload.chunks[match[1]].forEach(function (file) {
+          var link = document.createElement('link');
+          link.rel = 'modulepreload';
+          link.crossOrigin = '';
+          link.href = preload.base + file;
+          head.appendChild(link);
+        });
+        preload.fonts.forEach(function (file) {
+          var link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'font';
+          link.type = 'font/woff2';
+          link.crossOrigin = '';
+          link.href = preload.base + file;
+          head.appendChild(link);
+        });
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

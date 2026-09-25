@@ -1,0 +1,3427 @@
+/* The studio: title strip, control row, then lesson/setup | architecture | output. */
+
+/* A plain block, not a flex column, so nothing can widen the page on a phone. */
+.mlx-studio-page {
+  /* Wide enough for a lesson to read at a comfortable measure. */
+  --studio-rail: 300px;
+  /* The output column follows the height and never takes more than a third of the width. */
+  --studio-out: min(clamp(400px, 48vh, 640px), 30vw);
+}
+
+/* Exactly one screen tall; a column that does not fit scrolls on its own. */
+.mlx-studio {
+  width: 100%;
+  max-width: var(--studio-width);
+  height: calc(100vh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.mlx-studio__head,
+.mlx-studio__bar {
+  flex: none;
+}
+
+/* ---------- Full page: no site header or title strip, the title joins the control row ---------- */
+
+html[data-mlx-full] .mlx-skip-link,
+html[data-mlx-full] .mlx-header,
+html[data-mlx-full] .mlx-footer {
+  display: none;
+}
+
+html[data-mlx-full] .mlx-studio {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* The title over the icon links, right-aligned, as tall as a knob group. */
+.mlx-studio__barend {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  margin-left: auto;
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--border);
+}
+
+.mlx-studio__barend .mlx-studio__title {
+  font-size: var(--fs-sm);
+}
+
+.mlx-studio__barend .mlx-studio__tools {
+  margin-left: 0;
+  gap: var(--sp-2);
+  height: 26px;
+}
+
+.mlx-studio__barend .mlx-studio__links {
+  gap: 0;
+}
+
+/* ---------- Title strip ---------- */
+
+.mlx-studio__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: 8px var(--sp-4) 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mlx-studio__ident {
+  flex: none;
+  min-width: 0;
+}
+
+.mlx-studio__titlerow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mlx-studio__title {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Presets, then the icon links, pushed to the right of the title. */
+.mlx-studio__tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+/* Copy link, the post, the next explainer: icons only, the name on hover. */
+.mlx-studio__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--border);
+}
+
+.mlx-studio__links:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.mlx-studio__link {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.mlx-studio__link:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.mlx-studio__link[data-done] {
+  color: var(--tone-good);
+}
+
+/* ---------- Popovers: About and the shortcut list ---------- */
+
+.mlx-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+.mlx-popover__button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.mlx-popover__button:hover,
+.mlx-popover__button[aria-expanded='true'] {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.mlx-popover__pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 45;
+  width: max-content;
+  max-width: min(380px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  letter-spacing: 0;
+  white-space: normal;
+  animation: mlx-fade-in var(--dur-fast) var(--ease-out);
+}
+
+.mlx-popover__pop[data-align='right'] {
+  left: auto;
+  right: 0;
+}
+
+.mlx-studio__about {
+  margin-left: 2px;
+}
+
+.mlx-studio__about-summary {
+  margin: 0 0 8px;
+}
+
+.mlx-studio__about-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.mlx-studio__about-concepts li {
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+}
+
+.mlx-studio__about-meta {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.mlx-studio__about-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+/* ---------- The one control row ---------- */
+
+/* Transport on the left, knobs on the right, every block the same three lines from the top. */
+.mlx-studio__bar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: 8px var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.mlx-studio__knobs {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--border);
+}
+
+/* Two shapes only, stepper or dropdown, in equal cells; More follows the last knob. */
+.mlx-toprow {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+/* One captioned section per declared group, so the row reads as a desk. */
+.mlx-toprow__group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mlx-toprow__caption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  line-height: 11px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* Whole groups wrap first; a group wider than the row wraps its cells. */
+.mlx-toprow__cells {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sp-3) 12px;
+}
+
+.mlx-toprow__more {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-toprow__more:hover,
+.mlx-toprow__more[aria-expanded='true'] {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.mlx-toprow__more svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.mlx-toprow__more[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.mlx-toprow__cell {
+  flex: 0 0 auto;
+  min-width: 112px;
+}
+
+.mlx-toprow .mlx-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-toprow .mlx-field__head {
+  height: 16px;
+  margin-bottom: 5px;
+  gap: 4px;
+}
+
+.mlx-toprow .mlx-field__label {
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* The live value is plain figures, not a badge. */
+.mlx-toprow .mlx-field__value {
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mlx-toprow .mlx-field__note {
+  display: none;
+}
+
+/* The control line is 26px tall for every kind of knob. */
+.mlx-toprow .mlx-stepper--field {
+  align-self: stretch;
+  height: 26px;
+  box-sizing: border-box;
+}
+
+.mlx-toprow .mlx-stepper__label {
+  flex: 1;
+}
+
+.mlx-toprow .mlx-select select,
+.mlx-speed select {
+  height: 26px;
+  padding: 0 24px 0 8px;
+  font-size: var(--fs-xs);
+}
+
+/* ---------- Transport ---------- */
+
+/* The same three lines as a knob group: caption, label, then a 26px control line. */
+.mlx-transport {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mlx-transport__cells {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mlx-transport__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The label line, shared with the knobs' field labels. */
+.mlx-transport__label {
+  height: 16px;
+  margin-bottom: 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mlx-transport__label[data-tone='good'] {
+  color: var(--tone-good);
+}
+
+.mlx-transport__label[data-tone='warn'] {
+  color: var(--tone-warn);
+}
+
+.mlx-transport__label[data-tone='bad'] {
+  color: var(--tone-bad);
+}
+
+/* One bordered group, the way a toolbar reads: reset, play, step, finish. */
+.mlx-transport__buttons {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 26px;
+  box-sizing: border-box;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  overflow: hidden;
+}
+
+.mlx-tbtn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 24px;
+  color: var(--text-secondary);
+  user-select: none;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-tbtn + .mlx-tbtn {
+  border-left: 1px solid var(--border);
+}
+
+.mlx-tbtn:hover:not(:disabled) {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.mlx-tbtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* The group clips its corners, so the ring is drawn inside the button. */
+.mlx-tbtn:focus-visible {
+  outline-offset: -2px;
+}
+
+.mlx-tbtn--play:focus-visible {
+  outline-color: var(--accent-contrast);
+}
+
+.mlx-tbtn--play {
+  width: 40px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.mlx-tbtn--play:hover:not(:disabled) {
+  background: var(--accent-hover);
+  color: var(--accent-contrast);
+}
+
+.mlx-counter {
+  min-width: 64px;
+}
+
+/* A big number in the display sans, on the control line. */
+.mlx-counter__value {
+  height: 26px;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 26px;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mlx-counter__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  height: 2px;
+  border-radius: var(--radius-round);
+  background: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.mlx-counter__progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform var(--dur-fast) linear;
+}
+
+/* Until the visitor has run anything, the play button breathes. */
+.mlx-tbtn--play[data-nudge] {
+  animation: mlx-nudge 1.6s ease-in-out infinite;
+}
+
+.mlx-tbtn--play[data-nudge] svg {
+  animation: mlx-nudge-icon 1.6s ease-in-out infinite;
+}
+
+@keyframes mlx-nudge {
+  50% {
+    background: var(--accent-hover);
+  }
+}
+
+@keyframes mlx-nudge-icon {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+/* The shortcut list, behind a keyboard button on the control line. */
+.mlx-keys-menu {
+  flex: none;
+}
+
+.mlx-keys-menu .mlx-popover__button {
+  width: 26px;
+  height: 26px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-keys-menu .mlx-popover__button:hover,
+.mlx-keys-menu .mlx-popover__button[aria-expanded='true'] {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.mlx-keys-menu .mlx-popover__pop {
+  max-width: calc(100vw - 32px);
+  padding: 10px 12px;
+}
+
+.mlx-keys--stack {
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--fs-xs);
+}
+
+/* ---------- Body: rail | stage | output ---------- */
+
+.mlx-studio__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--studio-rail) minmax(0, 1fr) var(--studio-out);
+  align-items: stretch;
+}
+
+.mlx-studio__rail {
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  border-right: 1px solid var(--border);
+}
+
+.mlx-studio__out {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-3);
+  border-left: 1px solid var(--border);
+}
+
+.mlx-studio__out > .mlx-colhead,
+.mlx-studio__out > .mlx-strip {
+  flex: none;
+}
+
+/* Lines the heading up with the rail's first group title and the stage title. */
+.mlx-studio__out > .mlx-colhead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  padding: var(--sp-3) var(--sp-3) 0;
+}
+
+.mlx-studio__out > .mlx-colhead .mlx-colhead__title {
+  flex: none;
+}
+
+.mlx-studio__out > .mlx-colhead .mlx-colhead__blurb {
+  min-width: 0;
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Every region that scrolls inside the studio takes the slim bar. */
+.mlx-studio__rail,
+.mlx-studio__out,
+.mlx-studio__out .mlx-panel__body,
+.mlx-detail__body,
+.mlx-vtable,
+.mlx-tree {
+  scrollbar-width: thin;
+}
+
+/* Scroll fades: sticky bands that only cover content once a column overflows. */
+.mlx-studio__out::before,
+.mlx-studio__out::after,
+.mlx-studio__rail::before,
+.mlx-studio__rail::after {
+  content: '';
+  display: block;
+  position: sticky;
+  z-index: 1;
+  flex: none;
+  pointer-events: none;
+}
+
+.mlx-studio__out::before {
+  top: 0;
+  height: 12px;
+  margin-bottom: calc(-1 * var(--sp-3));
+  background: linear-gradient(var(--bg-primary), transparent);
+}
+
+.mlx-studio__out::after {
+  bottom: 0;
+  height: 20px;
+  margin-top: -20px;
+  background: linear-gradient(transparent, var(--bg-primary) 80%);
+}
+
+.mlx-studio__rail::before {
+  top: 0;
+  height: 16px;
+  margin-bottom: -16px;
+  background: linear-gradient(var(--bg-primary), transparent);
+}
+
+.mlx-studio__rail::after {
+  bottom: 0;
+  height: 16px;
+  margin-top: -16px;
+  background: linear-gradient(transparent, var(--bg-primary));
+}
+
+.mlx-studio__stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-3);
+  gap: var(--sp-3);
+}
+
+/* Phone only: the knobs fold behind this button in the bar. */
+.mlx-studio__settings {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+}
+
+.mlx-studio__settings[aria-expanded='true'] {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+/* Sits in the top-right corner of the architecture panel's header, icon only. */
+.mlx-studio__expand {
+  position: absolute;
+  top: calc(var(--sp-3) + 9px);
+  right: calc(var(--sp-3) + 10px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-tertiary);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-studio__stage:hover .mlx-studio__expand,
+.mlx-studio__expand:focus-visible,
+.mlx-studio[data-expanded] .mlx-studio__expand {
+  color: var(--text-primary);
+}
+
+.mlx-studio__expand:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.mlx-studio__arch .mlx-panel__head {
+  padding-right: 44px;
+}
+
+.mlx-studio__arch .mlx-panel__expand {
+  display: none;
+}
+
+/* ---------- Left rail: the lesson and the setup as two tabs ---------- */
+
+/* Sticky over the rail's scroll: two equal cells, the open one underlined. */
+.mlx-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.mlx-tabs__tab {
+  height: 36px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-tabs__tab:hover {
+  color: var(--text-primary);
+}
+
+.mlx-tabs__tab[aria-selected='true'] {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+/* The tab bar covers the top of the scroll; no fade needed under it. */
+.mlx-studio__rail:has(.mlx-tabs)::before {
+  display: none;
+}
+
+/* ---------- The lesson panel ---------- */
+
+.mlx-lesson {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+/* The lesson's name, the arrows to its neighbours, the way out. */
+.mlx-lesson__head {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 2px;
+}
+
+.mlx-lesson__where {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 24px;
+}
+
+.mlx-lesson__where:has(.mlx-lesson__arrow) {
+  margin-left: -6px;
+}
+
+.mlx-lesson__arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-lesson__arrow svg {
+  transform: rotate(90deg);
+}
+
+.mlx-lesson__arrow--next svg {
+  transform: rotate(-90deg);
+}
+
+.mlx-lesson__arrow:hover:not([aria-disabled='true']) {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.mlx-lesson__arrow[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.mlx-lesson__count,
+.mlx-lesson__exit,
+.mlx-outline__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mlx-lesson__count {
+  padding: 0 2px;
+}
+
+.mlx-lesson__exit {
+  margin-left: auto;
+}
+
+.mlx-lesson__exit:hover {
+  color: var(--text-primary);
+}
+
+.mlx-lesson__title {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mlx-lesson__hook {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* One line, so the step card sits at the same height in every lesson. */
+.mlx-lesson__hook--line {
+  min-height: 1.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The page's event in free play: a tone dot, then plain text. */
+.mlx-lesson__status {
+  position: relative;
+  margin: 0;
+  padding-left: 14px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-lesson__status::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.mlx-lesson__status[data-tone='good']::before {
+  background: var(--tone-good);
+}
+
+.mlx-lesson__status[data-tone='warn']::before {
+  background: var(--tone-warn);
+}
+
+.mlx-lesson__status[data-tone='bad']::before {
+  background: var(--tone-bad);
+}
+
+/* Two function charts stacked in one stage; side by side once the stage is wide. */
+.mlx-functions {
+  gap: 8px;
+}
+
+.mlx-functions > .mlx-chart {
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
+.mlx-studio[data-expanded] .mlx-functions {
+  flex-direction: row;
+}
+
+/* A small grid of numbers in a detail card: a kernel, a patch, a pooling window. */
+.mlx-pixels {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0 8px;
+}
+
+.mlx-pixels__cell {
+  padding: 4px 2px;
+  border-radius: 3px;
+  font-size: var(--fs-2xs);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.mlx-confusion td[data-tone='good'] {
+  color: var(--tone-good);
+}
+
+.mlx-confusion td[data-tone='bad'] {
+  color: var(--tone-bad);
+}
+
+/* The free-play rail head on a page without lessons. */
+.mlx-presets {
+  padding: var(--sp-3) var(--sp-3) 0;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+.mlx-presets .mlx-field {
+  margin-top: 4px;
+}
+
+/* The step card. */
+.mlx-step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-secondary);
+}
+
+/* Everything under the nav; remounts per step and fades in. */
+.mlx-step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: mlx-step-in var(--dur-fast) var(--ease-out);
+}
+
+.mlx-step__body > * {
+  flex: none;
+}
+
+/* Every step of the course laid out unseen; the wide layout reads the tallest off it. */
+.mlx-step__gauge {
+  display: none;
+}
+
+@keyframes mlx-step-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The narration: the one thing the reader reads, in full. */
+.mlx-step__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* The Run button a lesson shows when it could not play on entry. */
+.mlx-step__run {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+}
+
+.mlx-step__spinner {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-light);
+  border-top-color: var(--accent);
+  animation: mlx-spin 0.9s linear infinite;
+}
+
+@keyframes mlx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Where to look: the same pill as the tag on the highlighted element. */
+.mlx-step__focus {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-start;
+  margin: 0;
+  padding: 3px 9px 3px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.mlx-step__focus svg {
+  flex: none;
+}
+
+/* The idea to keep. */
+.mlx-step__takeaway {
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  background: var(--bg-tertiary);
+}
+
+.mlx-step__takeaway-label {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.mlx-step__takeaway p {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+/* The Start button under the free-play text. */
+.mlx-lesson__start {
+  display: flex;
+  margin-top: var(--sp-2);
+}
+
+.mlx-lesson__start .mlx-button {
+  gap: 6px;
+}
+
+/* Experiments: a list; the one tried last opens to its outcome. */
+.mlx-step__experiments {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.mlx-step__experiment {
+  border-bottom: 1px solid var(--border);
+}
+
+.mlx-step__experiment-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 2px;
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-step__experiment-head:hover {
+  color: var(--accent);
+}
+
+.mlx-step__experiment-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.mlx-step__experiment[data-done] .mlx-step__experiment-mark {
+  background: var(--tone-good-bg);
+  color: var(--tone-good);
+}
+
+.mlx-step__experiment[data-active] .mlx-step__experiment-head {
+  color: var(--accent);
+}
+
+.mlx-step__experiment-say {
+  margin: 0;
+  padding: 0 2px 10px 24px;
+  color: var(--text-secondary);
+}
+
+.mlx-step__experiment[data-active] .mlx-step__experiment-say {
+  color: var(--text-primary);
+}
+
+/* ---------- The outline: the course by section, the open lesson with its steps ---------- */
+
+.mlx-outline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mlx-outline__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px 4px;
+}
+
+.mlx-outline__progress {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-outline__section {
+  border-top: 1px solid var(--border);
+}
+
+/* A section folds on its header; the chevron turns to say so. */
+.mlx-outline__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 30px;
+  padding: 4px 2px;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-outline__label:hover {
+  color: var(--text-primary);
+}
+
+.mlx-outline__label-text {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+.mlx-outline__label-count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-outline__chevron {
+  display: grid;
+  color: var(--text-tertiary);
+  transform: rotate(-90deg);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-outline__section[data-open] .mlx-outline__chevron {
+  transform: none;
+}
+
+.mlx-outline__items {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 6px;
+}
+
+.mlx-outline__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  text-align: left;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-outline__item:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.mlx-outline__item[data-current] {
+  background: var(--accent-light);
+  color: var(--text-primary);
+}
+
+.mlx-outline__item[data-current]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.mlx-outline__num {
+  flex: none;
+  width: 14px;
+  padding-top: 1px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-outline__item[data-current] .mlx-outline__num {
+  color: var(--accent);
+}
+
+.mlx-outline__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.mlx-outline__tick {
+  flex: none;
+  display: grid;
+  padding-top: 2px;
+  color: var(--tone-good);
+}
+
+/* ---------- Two fixed regions while a lesson is open: the card, then the outline ---------- */
+
+/* Wide screens only: the rail stops scrolling; the card fills the space, the outline keeps a band. Expanded, the rail stays hidden. */
+@media (min-width: 1081px) {
+  .mlx-studio:not([data-expanded]) .mlx-studio__rail:has(.mlx-studio__lesson:not([hidden]) > .mlx-lesson:not([data-free])) {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    scrollbar-gutter: auto;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-studio__rail:has(.mlx-studio__lesson:not([hidden]) > .mlx-lesson:not([data-free]))::after {
+    display: none;
+  }
+
+  .mlx-studio__lesson:not([hidden]):has(> .mlx-lesson:not([data-free])) {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mlx-lesson:not([data-free]) {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .mlx-lesson:not([data-free]) > .mlx-lesson__head {
+    flex: none;
+  }
+
+  /* The card holds the height of the course's tallest step; Back and Next stay put and a longer body scrolls. */
+  .mlx-lesson:not([data-free]) > .mlx-step {
+    position: relative;
+    flex: 0 1 auto;
+    min-height: 240px;
+    overflow: hidden;
+  }
+
+  .mlx-lesson:not([data-free]) .mlx-step__body {
+    flex: 1 1 auto;
+    height: var(--mlx-step-body, auto);
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+  }
+
+  .mlx-lesson:not([data-free]) .mlx-step__gauge {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 12px;
+    right: 12px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .mlx-lesson:not([data-free]) .mlx-step__body--gauge {
+    height: auto;
+    animation: none;
+  }
+
+  /* The key idea sits at the foot of the card, so it reads from the same place every step. */
+  .mlx-lesson:not([data-free]) .mlx-step__takeaway {
+    margin-top: auto;
+  }
+
+  .mlx-lesson:not([data-free]) > .mlx-outline {
+    flex: 1 1 0;
+    min-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+  }
+
+  .mlx-lesson:not([data-free]) .mlx-outline__head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mlx-lesson:not([data-free]) .mlx-outline__section:first-of-type {
+    border-top: none;
+  }
+}
+
+/* ---------- The spotlight: what the step points at ---------- */
+
+/* A breathing accent ring. Outline follows the element's radius; box-shadow escapes overflow clips. */
+[data-mlx-spot] {
+  outline: 2px solid var(--accent);
+  outline-offset: var(--mlx-spot-offset, 2px);
+  box-shadow:
+    0 0 0 5px var(--accent-light),
+    0 0 14px 2px var(--accent-light);
+  animation: mlx-spot-pulse 1.6s var(--ease-out) infinite alternate;
+}
+
+@keyframes mlx-spot-pulse {
+  from {
+    box-shadow:
+      0 0 0 4px var(--accent-light),
+      0 0 10px 0 var(--accent-light);
+  }
+  to {
+    box-shadow:
+      0 0 0 8px var(--accent-light),
+      0 0 22px 4px var(--accent-light);
+  }
+}
+
+/* Metric tiles are chrome-less and a pixel apart: a wash under the ring. */
+.mlx-metric[data-mlx-spot],
+.mlx-chip[data-mlx-spot] {
+  --mlx-spot-offset: 1px;
+  margin: 0 -6px;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  background: var(--accent-light);
+}
+
+.mlx-segmented[data-mlx-spot],
+.mlx-transport__buttons[data-mlx-spot] {
+  --mlx-spot-offset: 1px;
+}
+
+/* The Setup tab, when the knob a step points at is behind it. */
+.mlx-tabs__tab[data-mlx-spot] {
+  --mlx-spot-offset: -4px;
+  border-radius: var(--radius);
+}
+
+.mlx-control[data-mlx-spot] {
+  --mlx-spot-offset: 4px;
+  border-radius: var(--radius);
+}
+
+/* The label on the highlighted element: the same pill as in the step card. */
+.mlx-spot-tag {
+  position: fixed;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px 3px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--shadow-md);
+  animation: mlx-fade-in var(--dur-fast) var(--ease-out);
+}
+
+.mlx-spot-tag::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  bottom: -5px;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  background: var(--accent);
+}
+
+.mlx-spot-tag[data-side='below']::after {
+  top: -4px;
+  bottom: auto;
+}
+
+.mlx-spot-tag[data-side='inside']::after {
+  display: none;
+}
+
+/* Short laptops: the charts keep the height, the hints under their titles go. */
+@media (max-height: 820px) {
+  .mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__subtitle {
+    display: none;
+  }
+}
+
+/* Expanded: a full-page view of the control row and the architecture alone. */
+.mlx-studio[data-expanded] {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  height: auto;
+  max-width: none;
+  border-bottom: none;
+}
+
+.mlx-studio[data-expanded] .mlx-studio__head {
+  display: none;
+}
+
+.mlx-studio[data-expanded] .mlx-studio__body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.mlx-studio[data-expanded] .mlx-studio__rail,
+.mlx-studio[data-expanded] .mlx-studio__out {
+  display: none;
+}
+
+.mlx-studio__arch {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The panel, its body and the canvas all stretch to the column height. */
+.mlx-studio__arch > *,
+.mlx-studio__arch .mlx-panel__body,
+.mlx-studio__arch .mlx-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-studio__arch .mlx-panel__body {
+  gap: var(--sp-2);
+}
+
+.mlx-studio__arch .mlx-chart__canvas {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Fill mode: the canvas takes its parent's height. */
+.mlx-chart__canvas--fill {
+  height: 100%;
+  min-height: 0;
+}
+
+/* ---------- The network's column headings and editor ---------- */
+
+/* One cell per diagram column, sharing the canvas's side margin. */
+.mlx-net-head {
+  display: grid;
+  grid-template-columns: repeat(var(--mlx-net-columns, 3), minmax(0, 1fr));
+  margin: 0 var(--mlx-net-margin, 16px);
+  row-gap: 8px;
+}
+
+.mlx-net-head__layers {
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-strong);
+}
+
+.mlx-net-head__col {
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  text-align: center;
+}
+
+.mlx-net-head__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mlx-net-head__sub {
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* A column is narrow once the card is open, so its stepper is compact. */
+.mlx-net-head__col .mlx-stepper__button {
+  width: 18px;
+  height: 18px;
+}
+
+.mlx-net-head__col .mlx-stepper__label {
+  padding: 0 3px;
+}
+
+.mlx-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 1px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+}
+
+.mlx-stepper__button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-base);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-secondary);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-stepper__button:hover:not(:disabled):not([aria-disabled='true']) {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.mlx-stepper__button:disabled,
+.mlx-stepper__button[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mlx-stepper__label {
+  padding: 0 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- The diagram frame and its detail card ---------- */
+
+/* The diagram, with the detail card docked on its right when open. */
+.mlx-arch {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 12px;
+}
+
+.mlx-arch__stage {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-arch > .mlx-chart,
+.mlx-arch__stage > .mlx-chart {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ridge and lasso: the fit over the weight plane, side by side once the stage is wide. */
+.mlx-reg-stage {
+  gap: 10px;
+}
+
+.mlx-reg-pane {
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px 4px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.mlx-reg-pane > .mlx-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-reg-pane .mlx-chart__canvas {
+  flex: 1;
+  min-height: 0;
+}
+
+.mlx-reg-pane__head {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 0 2px 4px;
+  min-width: 0;
+}
+
+/* The plane's axis picker, beside its title. */
+.mlx-reg-pane__pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+.mlx-reg-pane__head .mlx-legend {
+  margin-left: auto;
+}
+
+.mlx-reg-pane__title {
+  margin: 0;
+  flex: none;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.mlx-reg-pane__head .mlx-legend {
+  flex: 0 1 auto;
+  min-width: 0;
+  justify-content: flex-end;
+  row-gap: 2px;
+}
+
+/* Stacked, the square plane gets a little more of the height than the wide fit. */
+.mlx-reg-pane + .mlx-reg-pane {
+  flex-grow: 1.2;
+}
+
+.mlx-studio[data-expanded] .mlx-reg-stage,
+.mlx-panel--full .mlx-reg-stage {
+  flex-direction: row;
+}
+
+.mlx-studio[data-expanded] .mlx-reg-pane + .mlx-reg-pane,
+.mlx-panel--full .mlx-reg-pane + .mlx-reg-pane {
+  flex-grow: 1;
+}
+
+/* A compact dropdown in a panel head, such as the plane picker. */
+.mlx-select--head select {
+  padding: 3px 22px 3px 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  border-color: var(--border);
+}
+
+.mlx-select--head svg {
+  right: 7px;
+}
+
+/* A pinned card opens beside its point, inside the plot. Only the body scrolls. */
+.mlx-detail {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 16px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  line-height: 1.45;
+  animation: mlx-fade-in var(--dur-fast) var(--ease-out);
+}
+
+/* Docked: the same place every time, covering nothing. */
+.mlx-detail--dock {
+  position: static;
+  flex: none;
+  align-self: flex-start;
+  width: min(310px, 48%);
+  max-height: 100%;
+  box-shadow: none;
+}
+
+.mlx-studio[data-expanded] .mlx-detail--dock,
+.mlx-panel--full .mlx-detail--dock {
+  width: min(380px, 48%);
+}
+
+/* Docked, the card has the diagram's height; only the table scrolls. */
+.mlx-detail--dock .mlx-vtable {
+  flex: 1 1 auto;
+  min-height: 120px;
+  max-height: none;
+}
+
+/* A small tool over a diagram stage, such as the 3D view's reset. */
+.mlx-arch__tool {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mlx-arch__tool:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.mlx-arch__tool--wide {
+  width: auto;
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+}
+
+/* A switch over a diagram stage, at the top right. */
+.mlx-arch__tools {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+}
+
+.mlx-arch__tools .mlx-segmented__item {
+  flex: none;
+  padding: 3px 7px;
+  font-size: var(--fs-2xs);
+}
+
+/* The probe stepper in a panel head: compact, mono count. */
+.mlx-probe .mlx-stepper__button {
+  width: 20px;
+  height: 20px;
+}
+
+.mlx-probe .mlx-stepper__label {
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+}
+
+/* The hold button sits at the foot, clear of a lesson tag. */
+.mlx-arch__tool--foot {
+  top: auto;
+  bottom: 6px;
+}
+
+/* Pictures in a CNN card, with the operator between them. */
+.mlx-cnn-flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.mlx-cnn-flow__op {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  flex: none;
+}
+
+.mlx-cnn-picture {
+  flex: none;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.mlx-cnn-picture .mlx-chart {
+  margin: 0;
+}
+
+/* The patch, the kernel and their products side by side. */
+.mlx-cnn-grids {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mlx-cnn-grids > .mlx-pixels {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 4px 0;
+}
+
+.mlx-cnn-grids .mlx-pixels__cell {
+  padding: 3px 1px;
+  font-size: 9px;
+}
+
+/* ---------- The inspector: a column that is always there, so a click moves nothing ---------- */
+
+.mlx-inspector {
+  --mlx-inspector-w: 272px;
+  flex: none;
+  width: var(--mlx-inspector-w);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mlx-studio[data-expanded] .mlx-inspector,
+.mlx-panel--full .mlx-inspector {
+  --mlx-inspector-w: 360px;
+}
+
+.mlx-inspector .mlx-detail--dock,
+.mlx-studio[data-expanded] .mlx-inspector .mlx-detail--dock,
+.mlx-panel--full .mlx-inspector .mlx-detail--dock {
+  position: relative;
+  flex: 0 1 auto;
+  align-self: stretch;
+  width: auto;
+  min-height: 0;
+}
+
+/* The unit's two tiles on its card keep their height inside the column. */
+.mlx-studio__arch .mlx-detail__tiles,
+.mlx-studio__arch .mlx-detail__tiles .mlx-chart__canvas {
+  flex: none;
+}
+
+/* The readout: the symbol and its number for whatever the pointer is on, in the same place every time. */
+.mlx-readout {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 48px;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-readout[data-live] {
+  border-color: var(--accent);
+}
+
+.mlx-readout__title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mlx-readout[data-live] .mlx-readout__title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mlx-readout__rows {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  min-height: 1.5em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+}
+
+.mlx-readout__row {
+  display: inline-flex;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.mlx-readout__label {
+  color: var(--text-secondary);
+}
+
+.mlx-readout__value {
+  color: var(--accent);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A card's steps: the symbol, then what it does, one line each. */
+.mlx-detail__steps {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.mlx-detail__steps code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-primary);
+}
+
+/* The settings behind the picture: one folded line, the rows on a click. */
+.mlx-setup {
+  flex: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+}
+
+.mlx-setup__summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-tertiary);
+}
+
+.mlx-setup__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mlx-setup__summary::before {
+  content: '▸';
+  flex: none;
+  font-size: 9px;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.mlx-setup[open] > .mlx-setup__summary::before {
+  transform: rotate(90deg);
+}
+
+.mlx-setup__summary:hover {
+  color: var(--text-primary);
+}
+
+.mlx-setup__label {
+  flex: none;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mlx-setup__line {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-secondary);
+}
+
+.mlx-setup[open] .mlx-setup__line {
+  display: none;
+}
+
+.mlx-setup__rows {
+  margin: 0;
+  padding: 0 10px 7px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 10px;
+}
+
+.mlx-setup__row {
+  display: contents;
+}
+
+.mlx-setup__row dt {
+  color: var(--text-tertiary);
+}
+
+.mlx-setup__row dd {
+  margin: 0;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Under the strip while nothing is open: the page's reference, quiet. */
+.mlx-inspector__idle {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.mlx-inspector__idle > * {
+  flex: none;
+}
+
+.mlx-inspector__idle .mlx-formula {
+  margin: 0;
+}
+
+.mlx-inspector__idle p {
+  margin: 0;
+}
+
+.mlx-inspector__hint {
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+/* The head and the foot stay put; the map of the model lives in one of them. */
+.mlx-inspector__head {
+  flex: none;
+}
+
+.mlx-inspector__foot {
+  flex: none;
+  margin-top: auto;
+}
+
+.mlx-inspector__map {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  padding: 4px 6px 2px;
+}
+
+.mlx-inspector__map .mlx-chart {
+  margin: 0;
+}
+
+.mlx-detail__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 12px 12px;
+}
+
+/* Blocks keep their natural height; only the body scrolls. */
+.mlx-detail__body > * {
+  flex: none;
+}
+
+.mlx-detail__close {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+}
+
+.mlx-detail__close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* The heading stays put while the table under it scrolls. */
+.mlx-detail__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: 0 -12px;
+  padding: 10px 36px 8px 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mlx-detail__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mlx-detail__title {
+  margin-top: 2px;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.mlx-detail__note {
+  margin: 0;
+}
+
+.mlx-detail__shape {
+  margin: 1px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+/* A vector over the dataset: every row, scrolling inside the card. */
+.mlx-vtable {
+  max-height: 240px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+}
+
+.mlx-vtable .mlx-wsum th,
+.mlx-vtable .mlx-wsum td {
+  padding: 2px;
+}
+
+.mlx-vtable .mlx-wsum thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface);
+  border-bottom: none;
+  box-shadow: inset 0 -1px 0 var(--border-strong);
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mlx-vtable .mlx-wsum th[scope='row'] {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.mlx-vtable .mlx-wsum tbody tr + tr {
+  border-top: none;
+}
+
+.mlx-vtable .mlx-wsum tr[data-dim] {
+  opacity: 0.35;
+}
+
+.mlx-vtable__cell {
+  display: block;
+  padding: 1px 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* The weighted sum as a table: every number once. */
+.mlx-wsum {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  line-height: 1.3;
+  color: var(--text-secondary);
+}
+
+.mlx-wsum th,
+.mlx-wsum td {
+  padding: 2px 4px;
+  text-align: right;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mlx-wsum th[scope='row'],
+.mlx-wsum thead th:first-child {
+  text-align: left;
+}
+
+.mlx-wsum thead th {
+  padding-bottom: 3px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.mlx-wsum tbody tr + tr {
+  border-top: 1px dashed var(--border-light);
+}
+
+.mlx-wsum tbody th {
+  color: var(--text-primary);
+}
+
+.mlx-wsum tfoot tr {
+  border-top: 1px solid var(--border-strong);
+}
+
+.mlx-wsum tfoot th {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.mlx-wsum tfoot td {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mlx-wsum tfoot tr[data-tone='accent'] td {
+  color: var(--accent);
+}
+
+.mlx-wsum tfoot tr[data-tone='good'] td {
+  color: var(--tone-good);
+}
+
+.mlx-wsum tfoot tr[data-tone='bad'] td {
+  color: var(--tone-bad);
+}
+
+.mlx-wsum__jump {
+  padding: 0 4px;
+  border-radius: var(--radius-xs);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.mlx-wsum__jump:hover {
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* The unit's picture; click it to see it large. */
+.mlx-detail__picture {
+  width: 72px;
+  cursor: zoom-in;
+}
+
+.mlx-detail__picture[data-large] {
+  width: 100%;
+  cursor: zoom-out;
+}
+
+.mlx-scalars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mlx-scalar {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+}
+
+.mlx-scalar--jump {
+  cursor: pointer;
+  font: inherit;
+  transition: box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.mlx-scalar--jump:hover {
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.mlx-scalar__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+.mlx-scalar__value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-scalar[data-tone='accent'] .mlx-scalar__value {
+  color: var(--accent);
+}
+
+.mlx-scalar[data-tone='good'] .mlx-scalar__value {
+  color: var(--tone-good);
+}
+
+.mlx-scalar[data-tone='bad'] .mlx-scalar__value {
+  color: var(--tone-bad);
+}
+
+/* The equation a component computes, with its live numbers. */
+.mlx-formula {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  font-size: var(--fs-xs);
+  color: var(--text-primary);
+}
+
+.mlx-formula .mlx-math--display {
+  padding: 2px 0;
+  text-align: left;
+}
+
+.mlx-formula .katex-display > .katex {
+  text-align: left;
+}
+
+/* The picture and the equation share a row while the picture is small. */
+.mlx-detail__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.mlx-detail__row > .mlx-formula {
+  flex: 1;
+  min-width: 0;
+}
+
+.mlx-detail__row > .mlx-detail__picture {
+  flex: none;
+}
+
+.mlx-detail__row:has(.mlx-detail__picture[data-large]) {
+  flex-direction: column;
+}
+
+.mlx-detail__row:has(.mlx-detail__picture[data-large]) > .mlx-formula {
+  width: 100%;
+}
+
+/* Headings in a card are symbols, so they keep their case. */
+.mlx-detail .mlx-wsum thead th {
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Column headings sort; the active one is marked. */
+.mlx-vtable__sort {
+  padding: 0;
+  border-radius: var(--radius-xs);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mlx-vtable__sort:hover,
+.mlx-vtable__sort[data-on] {
+  color: var(--text-primary);
+}
+
+/* Mean and spread rows stay under the headings while the rows scroll. */
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat th,
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat td {
+  position: sticky;
+  top: 19px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  background: var(--bg-surface);
+  color: var(--text-tertiary);
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat:last-child th,
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat:last-child td {
+  box-shadow: inset 0 -1px 0 var(--border-strong);
+  padding-bottom: 2px;
+}
+
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat + .mlx-vtable__stat th,
+.mlx-vtable .mlx-wsum thead .mlx-vtable__stat + .mlx-vtable__stat td {
+  top: 36px;
+}
+
+.mlx-vtable__bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
+  padding: 3px 4px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mlx-vtable__bar ~ .mlx-wsum thead th {
+  top: 25px;
+}
+
+.mlx-vtable__bar ~ .mlx-wsum thead .mlx-vtable__stat th,
+.mlx-vtable__bar ~ .mlx-wsum thead .mlx-vtable__stat td {
+  top: 44px;
+}
+
+.mlx-vtable__bar ~ .mlx-wsum thead .mlx-vtable__stat + .mlx-vtable__stat th,
+.mlx-vtable__bar ~ .mlx-wsum thead .mlx-vtable__stat + .mlx-vtable__stat td {
+  top: 61px;
+}
+
+.mlx-vtable__toggle {
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-vtable__toggle::before {
+  content: '+ ';
+}
+
+.mlx-vtable__toggle:hover {
+  color: var(--text-primary);
+}
+
+.mlx-vtable__toggle[data-on] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mlx-vtable__toggle[data-on]::before {
+  content: '− ';
+}
+
+/* The rest of a capped table, one chip under it. */
+.mlx-vtable__more {
+  align-self: flex-start;
+  margin: 6px 0 2px;
+}
+
+.mlx-vtable__more::before {
+  content: '';
+}
+
+/* The tree fills its panel and scrolls sideways when it outgrows the width. */
+.mlx-tree {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.mlx-tree__inner {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-tree__inner > .mlx-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A wide tree fades at both edges and carries a scroll cue. */
+.mlx-tree[data-overflow] {
+  mask-image: linear-gradient(90deg, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+}
+
+.mlx-tree__cue {
+  position: sticky;
+  left: 0;
+  flex: none;
+  margin: 0;
+  padding: 2px 24px 4px;
+  text-align: center;
+}
+
+/* ---------- Column headings ---------- */
+
+.mlx-colhead__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mlx-colhead__blurb {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  line-height: 1.45;
+}
+
+.mlx-studio__rail .mlx-controls {
+  padding: var(--sp-3);
+}
+
+/* ---------- Output column ---------- */
+
+.mlx-studio .mlx-panel:not(.mlx-panel--full) {
+  border: none;
+  border-radius: 0;
+}
+
+.mlx-studio__out .mlx-panel {
+  flex: none;
+}
+
+.mlx-studio__out .mlx-panel + .mlx-panel {
+  border-top: 1px solid var(--border);
+}
+
+/* Two charts share the column, the main picture taking the larger share; a short screen scrolls. */
+.mlx-studio__out .mlx-panel--fill {
+  flex: 5 0 auto;
+}
+
+.mlx-studio__out .mlx-panel--fill ~ .mlx-panel--fill {
+  flex: 3 0 auto;
+}
+
+/* A table or a tile grid inside a fill panel scrolls within it. */
+.mlx-studio__out .mlx-panel--fill .mlx-panel__body {
+  flex: 1 1 144px;
+  min-height: 0;
+  contain: size;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mlx-studio__out .mlx-panel__head {
+  padding: var(--sp-2) var(--sp-3) 6px;
+}
+
+.mlx-studio__out .mlx-panel__title {
+  font-size: var(--fs-sm);
+}
+
+/* The numbers sit under the charts, pinned to the bottom, the rest folded behind More. */
+.mlx-studio__out > .mlx-strip {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  padding: 0 var(--sp-3) var(--sp-2);
+  border-top: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+/* The strip carries the bottom scroll fade, so the column's own steps aside. */
+.mlx-studio__out > .mlx-strip::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 20px;
+  pointer-events: none;
+  background: linear-gradient(transparent, var(--bg-primary) 80%);
+}
+
+.mlx-studio__out:has(> .mlx-strip)::after {
+  display: none;
+}
+
+/* The chips wrap among themselves on a narrow column; More keeps its corner. */
+.mlx-strip__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  min-height: 30px;
+  padding-top: 5px;
+}
+
+.mlx-strip__chips {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 10px;
+}
+
+.mlx-strip__more {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 0 2px 4px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-strip__more:hover,
+.mlx-strip__more[aria-expanded='true'] {
+  color: var(--text-primary);
+}
+
+.mlx-strip__more svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.mlx-strip__more[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.mlx-strip__drawer {
+  padding-top: 2px;
+}
+
+.mlx-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mlx-chip__mark {
+  flex: none;
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.mlx-chip__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.mlx-chip[data-tone='good'] .mlx-chip__value {
+  color: var(--tone-good);
+}
+
+.mlx-chip[data-tone='warn'] .mlx-chip__value {
+  color: var(--tone-warn);
+}
+
+.mlx-chip[data-tone='bad'] .mlx-chip__value {
+  color: var(--tone-bad);
+}
+
+.mlx-chip[data-tone='accent'] .mlx-chip__value {
+  color: var(--accent);
+}
+
+.mlx-chip .mlx-chip__value[data-empty] {
+  color: var(--text-tertiary);
+}
+
+/* Metrics in the column are read at a glance, so they lose the tile chrome. */
+.mlx-studio__out .mlx-metrics {
+  --mlx-metric-columns: 2;
+  gap: 1px var(--sp-3);
+}
+
+/* The wide column fits three tiles across. */
+@media (min-width: 1321px) {
+  .mlx-studio__out .mlx-metrics {
+    --mlx-metric-columns: 3;
+  }
+}
+
+.mlx-studio__out .mlx-metric {
+  padding: 3px 0;
+  border-radius: 0;
+  background: none;
+}
+
+.mlx-studio__out .mlx-metric__label {
+  font-size: var(--fs-2xs);
+  line-height: 1.3;
+  margin-bottom: 1px;
+}
+
+.mlx-studio__out .mlx-metric__value {
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+
+.mlx-studio__out .mlx-metric__caption {
+  margin-top: 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Panel chrome inside the narrow columns ---------- */
+
+/* The architecture header wraps its actions under a long title. */
+.mlx-studio__arch .mlx-panel__head {
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* The header is a grid; when the actions fit beside the title they lift up next to it (data-fit). */
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  column-gap: 6px;
+  row-gap: 4px;
+  align-items: center;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__titles {
+  display: contents;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__title {
+  grid-column: 1;
+  grid-row: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__expand {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__subtitle,
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__actions {
+  grid-column: 1 / -1;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__head[data-fit] .mlx-panel__actions {
+  grid-column: 2;
+  grid-row: 1;
+  flex-wrap: nowrap;
+}
+
+.mlx-studio__out .mlx-panel:not(.mlx-panel--full) .mlx-panel__subtitle {
+  margin-top: 0;
+}
+
+.mlx-studio__out .mlx-panel__actions,
+.mlx-studio__arch .mlx-panel__actions {
+  gap: var(--sp-2);
+}
+
+.mlx-studio__out .mlx-panel__body {
+  padding: var(--sp-3);
+}
+
+/* One line, the rest on hover: the chart under it needs the height more. */
+.mlx-studio__out .mlx-panel__subtitle {
+  max-width: none;
+  margin-top: 1px;
+  font-size: var(--fs-2xs);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mlx-studio__out .mlx-panel--full .mlx-panel__head {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* The view switch is a segmented control at half scale. */
+.mlx-viewswitch .mlx-segmented__item {
+  flex: none;
+  padding: 3px 7px;
+  font-size: var(--fs-2xs);
+}
+
+/* ---------- The wide desk: more room left and right, the words at a reading size ---------- */
+
+/* A panel target carries the tag only; the ring is for small things. */
+.mlx-studio[data-wide] .mlx-panel[data-mlx-spot] {
+  outline: none;
+  box-shadow: none;
+  animation: none;
+}
+
+/* A knob the open lesson does not name steps back. */
+.mlx-studio[data-wide][data-lesson] .mlx-toprow__cell[data-named='no'] {
+  opacity: 0.5;
+}
+
+/* The numbers the narration quotes, as chips under the text. */
+.mlx-step__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0;
+}
+
+.mlx-step__number {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.mlx-step__number dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mlx-step__number dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.mlx-step__experiment-say--running {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The lesson column and the output column both get more room; the picture in the middle takes the rest. */
+@media (min-width: 1081px) {
+  .mlx-studio[data-wide] {
+    --studio-rail: 380px;
+    --studio-out: min(clamp(440px, 52vh, 700px), 34vw);
+  }
+
+  /* A stage with its own inspector keeps the output column as it was. */
+  .mlx-studio[data-wide='rail'] {
+    --studio-out: min(clamp(400px, 48vh, 640px), 30vw);
+  }
+
+  .mlx-studio[data-wide] .mlx-step__experiment-say {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  /* A tighter rhythm inside the card, so text, chips, runs and the key idea share one screen. The gauge reads live numbers once at mount; a line of allowance covers what they grow into. */
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) .mlx-step__body {
+    gap: 8px;
+  }
+
+  /* Never the gauge copies themselves, or the card would measure its own allowance and grow without end. */
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) .mlx-step__body:not(.mlx-step__body--gauge) {
+    height: calc(var(--mlx-step-body, 240px) + 24px);
+  }
+
+  .mlx-studio[data-wide] .mlx-step__experiment-head {
+    min-height: 30px;
+    padding: 3px 2px;
+  }
+
+  .mlx-studio[data-wide] .mlx-step__experiment-say {
+    padding-bottom: 8px;
+  }
+
+  .mlx-studio[data-wide] .mlx-step__takeaway {
+    padding: 6px 10px;
+  }
+
+  /* With the step row gone, the lesson arrows in the head are the navigation. */
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) .mlx-lesson__arrow {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    border: 1px solid var(--border-strong);
+  }
+
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) .mlx-lesson__arrow[aria-disabled] {
+    color: var(--text-tertiary);
+    border-color: var(--border);
+  }
+
+  /* The hook repeats the text; the outline row keeps it as a tooltip. */
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) .mlx-lesson__hook--line {
+    display: none;
+  }
+
+  /* The tag on the page names the target; the pill in the card would say it twice. */
+  .mlx-studio[data-wide] .mlx-step__focus {
+    display: none;
+  }
+
+  /* The card comes first; the outline keeps its head and scrolls in whatever is left. */
+  .mlx-studio[data-wide] .mlx-lesson:not([data-free]) > .mlx-outline {
+    flex: 1 1 0;
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 1081px) and (max-width: 1320px) {
+  .mlx-studio[data-wide] {
+    --studio-rail: 340px;
+    --studio-out: 34vw;
+  }
+
+  .mlx-studio[data-wide='rail'] {
+    --studio-out: 340px;
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+/* Laptop: narrower side columns, tighter desk. */
+@media (max-width: 1320px) {
+  .mlx-studio-page {
+    --studio-rail: 264px;
+    --studio-out: 340px;
+  }
+
+  .mlx-transport {
+    gap: 8px;
+  }
+
+  .mlx-studio__knobs {
+    padding-left: 12px;
+  }
+
+  .mlx-toprow {
+    gap: var(--sp-3) var(--sp-4);
+  }
+}
+
+/* Tablet: the output drops under the architecture and the studio flows with the page. */
+@media (max-width: 1080px) {
+  .mlx-studio:not([data-expanded]) {
+    height: auto;
+  }
+
+  /* No room beside the diagram: the docked card goes under it. */
+  .mlx-studio:not([data-expanded]) .mlx-arch {
+    flex-direction: column;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-arch__stage {
+    flex: 1 1 auto;
+    min-height: clamp(280px, 46svh, 460px);
+  }
+
+  /* Two stacked panes need the room of two charts. */
+  .mlx-studio:not([data-expanded]) .mlx-reg-stage {
+    min-height: clamp(520px, 78svh, 760px);
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-detail--dock {
+    align-self: stretch;
+    width: auto;
+    max-height: 60vh;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-inspector {
+    width: auto;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-inspector__idle,
+  .mlx-studio:not([data-expanded]) .mlx-setup {
+    display: none;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-inspector__foot {
+    margin-top: 0;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-studio__rail,
+  .mlx-studio:not([data-expanded]) .mlx-studio__out {
+    overflow: visible;
+  }
+
+  /* The rail no longer scrolls on its own, so the tabs sit in the flow. */
+  .mlx-tabs {
+    position: static;
+  }
+
+  /* The picture keeps a readable height while the page flows. */
+  .mlx-studio:not([data-expanded]) .mlx-studio__arch {
+    min-height: clamp(400px, 50vh, 540px);
+  }
+
+  .mlx-studio__head {
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+  }
+
+  /* One wrapping row: the transport, then every group flows after it. */
+  .mlx-studio__bar {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-4);
+  }
+
+  .mlx-studio__knobs,
+  .mlx-toprow {
+    display: contents;
+  }
+
+  .mlx-studio__body {
+    grid-template-columns: var(--studio-rail) minmax(0, 1fr);
+  }
+
+  .mlx-studio__out {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+  }
+
+  .mlx-studio__out .mlx-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mlx-studio__out .mlx-panel__body {
+    flex: 1;
+  }
+
+  .mlx-studio__out > .mlx-colhead,
+  .mlx-studio__out > .mlx-strip {
+    grid-column: 1 / -1;
+  }
+
+  /* Nothing scrolls under the strip here, so it sits in the flow. */
+  .mlx-studio__out > .mlx-strip {
+    position: static;
+  }
+
+  .mlx-studio__out > .mlx-strip::before {
+    display: none;
+  }
+
+  .mlx-studio__out .mlx-metrics {
+    --mlx-metric-columns: 4;
+  }
+
+  .mlx-studio__out .mlx-panel--fill {
+    min-height: 0;
+  }
+
+  .mlx-studio__out::before,
+  .mlx-studio__out::after,
+  .mlx-studio__rail::before,
+  .mlx-studio__rail::after {
+    display: none;
+  }
+}
+
+/* Phone: lesson, then picture and output; the transport pins under the header, knobs fold behind Settings. */
+@media (max-width: 760px) {
+  .mlx-studio__tools {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+
+  .mlx-studio__bar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    gap: var(--sp-2) var(--sp-3);
+  }
+
+  /* Expanded, or with the knobs sheet open, the bar scrolls with the page. */
+  .mlx-studio[data-expanded] .mlx-studio__bar,
+  .mlx-studio__bar:has(.mlx-studio__knobs:not([hidden])) {
+    position: static;
+  }
+
+  .mlx-studio[data-expanded] .mlx-studio__stage {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .mlx-transport {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .mlx-transport__cells {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .mlx-studio__settings {
+    flex: none;
+    display: inline-flex;
+    align-self: flex-end;
+  }
+
+  /* Touch has no shortcuts, and one speed is enough on a small screen. */
+  .mlx-transport__cell--keys,
+  .mlx-speed {
+    display: none;
+  }
+
+  /* Touch targets on the taller control line. */
+  .mlx-transport__buttons,
+  .mlx-counter__value {
+    height: 36px;
+  }
+
+  .mlx-counter__value {
+    line-height: 36px;
+  }
+
+  .mlx-tbtn {
+    width: 42px;
+    height: 34px;
+  }
+
+  .mlx-tbtn--play {
+    width: 50px;
+  }
+
+  .mlx-stepper__button {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* The control line grows to the 36px of a touch-sized dropdown. */
+  .mlx-toprow .mlx-stepper--field,
+  .mlx-toprow__more {
+    height: 36px;
+  }
+
+  .mlx-tip__button,
+  .mlx-popover__button,
+  .mlx-panel__expand {
+    position: relative;
+  }
+
+  .mlx-tip__button::after,
+  .mlx-popover__button::after,
+  .mlx-panel__expand::after,
+  .mlx-studio__expand::after,
+  .mlx-detail__close::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+  }
+
+  .mlx-studio__rail {
+    border-right: none;
+  }
+
+  .mlx-studio__out {
+    border-left: none;
+  }
+
+  .mlx-studio__knobs {
+    order: 4;
+  }
+
+  [data-lesson-target] {
+    scroll-margin-top: 200px;
+  }
+
+  /* Touch sizes for the lesson's buttons and rows. */
+  .mlx-outline__item,
+  .mlx-step__experiment-head {
+    min-height: 36px;
+  }
+
+  .mlx-lesson__arrow {
+    width: 28px;
+    height: 28px;
+  }
+
+  .mlx-studio__knobs,
+  .mlx-toprow {
+    display: flex;
+  }
+
+  .mlx-studio__knobs {
+    flex: 1 1 100%;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--border);
+  }
+
+  .mlx-toprow {
+    gap: var(--sp-3) var(--sp-4);
+  }
+
+  .mlx-studio__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mlx-studio__rail {
+    order: 1;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mlx-studio__stage {
+    order: 2;
+  }
+
+  .mlx-studio__out {
+    order: 3;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mlx-studio__out .mlx-metrics {
+    --mlx-metric-columns: 2;
+  }
+
+  .mlx-studio:not([data-expanded]) .mlx-studio__arch {
+    min-height: 70vh;
+    min-height: clamp(360px, 70svh, 640px);
+  }
+
+  /* A wiring diagram is width-bound on a phone; a taller box only adds floor. */
+  .mlx-studio:not([data-expanded])
+    .mlx-studio__arch:has(.mlx-arch):not(:has(.mlx-net-head)) {
+    min-height: clamp(320px, 52svh, 520px);
+  }
+
+  /* Room for the expand button; the actions wrap under a long title. */
+  .mlx-studio__arch .mlx-panel__head {
+    padding-right: 44px;
+  }
+
+  .mlx-studio[data-expanded] .mlx-studio__arch .mlx-panel__head {
+    padding-right: 104px;
+  }
+
+  .mlx-studio__arch .mlx-panel__actions {
+    row-gap: 4px;
+  }
+
+  /* The layer and unit steppers share one wrapping row. */
+  .mlx-net-head__layers {
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mlx-studio__settings {
+    padding: 8px;
+  }
+
+  .mlx-studio__settings span {
+    display: none;
+  }
+}
+
+/* Past the studio's own width, hairlines mark where it ends. */
+@media (min-width: 1561px) {
+  .mlx-studio {
+    border-inline: 1px solid var(--border);
+  }
+
+  .mlx-studio[data-expanded] {
+    border-inline: none;
+  }
+}
+
+/* Last, so the attribute beats every display rule above. */
+.mlx-studio__bar > .mlx-studio__knobs[hidden] {
+  display: none;
+}

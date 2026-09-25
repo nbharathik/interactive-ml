@@ -1,0 +1,981 @@
+/* Explainer primitives: controls, panels, maths, callouts, metrics, pager. */
+
+/* ---------- Controls ---------- */
+
+.mlx-controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-control-group + .mlx-control-group {
+  border-top: 1px solid var(--border);
+}
+
+.mlx-control-group__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.mlx-control-group__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-control-group__chevron {
+  color: var(--text-tertiary);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+  transform: rotate(-90deg);
+}
+
+.mlx-control-group__head:hover .mlx-control-group__title,
+.mlx-control-group__head:hover .mlx-control-group__chevron {
+  color: var(--text-primary);
+}
+
+.mlx-control-group[data-open] .mlx-control-group__chevron {
+  transform: rotate(0deg);
+}
+
+.mlx-control-group__body {
+  padding: 0 var(--sp-4) var(--sp-4);
+  display: grid;
+  gap: var(--sp-4);
+}
+
+/* The head keeps its tooltip readable; only the control itself goes inert. */
+.mlx-field[data-disabled] > .mlx-field__head {
+  opacity: 0.8;
+}
+
+.mlx-field[data-disabled] > :not(.mlx-field__head) {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.mlx-field__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: 7px;
+}
+
+.mlx-field__label {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mlx-field__value {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.mlx-field__note {
+  margin-top: 6px;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  line-height: 1.45;
+}
+
+.mlx-field--inline {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+
+.mlx-field__label--inline {
+  flex: 0 1 auto;
+  min-width: 0;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.mlx-field--inline .mlx-tip {
+  flex: none;
+  height: 20px;
+}
+
+/* Stepper: a number the reader nudges, never drags. */
+
+.mlx-stepper--field {
+  align-self: flex-start;
+}
+
+.mlx-stepper--field .mlx-stepper__label {
+  min-width: 52px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+
+/* Slider: a number the reader drags; the readout sits in the field head. */
+
+.mlx-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mlx-slider:disabled {
+  cursor: default;
+}
+
+.mlx-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--mlx-fill, 0%),
+    var(--bg-tertiary) var(--mlx-fill, 0%)
+  );
+}
+
+.mlx-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-tertiary);
+}
+
+.mlx-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.mlx-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg-surface);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.mlx-slider::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg-surface);
+}
+
+.mlx-slider:hover:not(:disabled)::-webkit-slider-thumb,
+.mlx-slider:active:not(:disabled)::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* The ring goes on the thumb, not around the whole track. */
+.mlx-slider:focus-visible {
+  outline: none;
+}
+
+.mlx-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.mlx-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* Select */
+
+.mlx-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mlx-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 7px 30px 7px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-select select:hover {
+  border-color: var(--text-primary);
+}
+
+.mlx-select svg {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: var(--text-tertiary);
+}
+
+/* Segmented */
+
+.mlx-segmented {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius);
+  background: var(--bg-tertiary);
+}
+
+.mlx-segmented__item {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-segmented__item:hover:not([data-active]) {
+  color: var(--text-primary);
+}
+
+.mlx-segmented__item[data-active] {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+/* Switch */
+
+.mlx-switch {
+  flex: none;
+  padding: 0;
+  border-radius: var(--radius-round);
+}
+
+.mlx-switch__track {
+  display: block;
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border-radius: var(--radius-round);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-strong);
+  transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+}
+
+.mlx-switch[aria-checked='true'] .mlx-switch__track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.mlx-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.mlx-switch[aria-checked='true'] .mlx-switch__thumb {
+  box-shadow: none;
+}
+
+.mlx-switch[aria-checked='true'] .mlx-switch__thumb {
+  transform: translateX(14px);
+}
+
+/* Seed */
+
+.mlx-seed {
+  display: flex;
+  gap: 6px;
+}
+
+.mlx-seed__shuffle {
+  flex: none;
+  aspect-ratio: 1;
+  padding: 0;
+}
+
+/* Zero width, so the box grows to the rail instead of the rail to the box. */
+.mlx-seed__input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: var(--fs-sm);
+  font-family: var(--font-mono);
+}
+
+.mlx-seed__input:focus {
+  border-color: var(--text-primary);
+}
+
+.mlx-seed__input::-webkit-inner-spin-button,
+.mlx-seed__input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.mlx-seed__input {
+  -moz-appearance: textfield;
+}
+
+/* Info tip */
+
+.mlx-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* A 24px target around a 13px glyph; the negative margin keeps the label's rhythm. */
+.mlx-tip__button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: -4px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-tip__button:hover,
+.mlx-tip__button[aria-expanded='true'] {
+  color: var(--accent);
+}
+
+/* With a pointer, the icon appears when the reader reaches for its field. */
+@media (hover: hover) {
+  .mlx-tip {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  :is(.mlx-field, .mlx-metric, .mlx-toprow__cell):hover .mlx-tip,
+  .mlx-tip:focus-within,
+  .mlx-tip:has(.mlx-tip__button[aria-expanded='true']) {
+    opacity: 1;
+  }
+}
+
+.mlx-tip__bubble {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  width: max-content;
+  /* Never wider than the viewport allows, so an open tip cannot push the page. */
+  max-width: min(230px, calc(100vw - 2.5rem));
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--tip-bg);
+  color: var(--tip-text);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  line-height: 1.45;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  animation: mlx-tip-in var(--dur-fast) var(--ease-out);
+}
+
+@keyframes mlx-tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.mlx-tip__bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: var(--mlx-tip-arrow, 50%);
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--tip-bg);
+}
+
+.mlx-tip__bubble[data-side='below']::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--tip-bg);
+}
+
+/* ---------- Presets ---------- */
+
+.mlx-badge {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mlx-badge--good {
+  background: var(--tone-good-bg);
+  color: var(--tone-good);
+}
+
+.mlx-badge--warn {
+  background: var(--tone-warn-bg);
+  color: var(--tone-warn);
+}
+
+.mlx-badge--bad {
+  background: var(--tone-bad-bg);
+  color: var(--tone-bad);
+}
+
+/* ---------- Panels ---------- */
+
+/* Panels are article cards: the canvas colour, a hairline, no shadow. */
+.mlx-panel {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.mlx-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4) 0;
+  flex-wrap: wrap;
+}
+
+/* The titles take the slack, so the actions and the expand button sit right. */
+.mlx-panel__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Any panel can take the whole screen; Esc or the same button brings it back. */
+.mlx-panel__expand {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.mlx-panel__expand:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.mlx-panel--full {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+  padding: var(--sp-3) var(--sp-5);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.mlx-panel--full .mlx-panel__body {
+  flex: 1;
+  min-height: 0;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* Charts stretch to the space the full-screen panel gives them. */
+.mlx-panel--full .mlx-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-panel--full .mlx-chart__canvas {
+  flex: 1;
+  min-height: 0;
+}
+
+/* A fill panel takes its share of the column and hands it to its chart. */
+.mlx-panel--fill {
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-panel--fill .mlx-panel__body,
+.mlx-panel--fill .mlx-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mlx-panel--fill .mlx-chart__canvas {
+  flex: 1;
+  min-height: 0;
+}
+
+/* A wrapper between a fill panel and its chart must pass the height through. */
+.mlx-panel--fill .mlx-chart-host,
+.mlx-panel--full .mlx-chart-host {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* In fill mode the bitmap never props its own box up. */
+.mlx-chart__canvas--fill > canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.mlx-panel__title {
+  font-size: var(--fs-base);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.mlx-panel__subtitle {
+  margin-top: 3px;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  max-width: 62ch;
+}
+
+.mlx-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.mlx-panel__body {
+  padding: var(--sp-4);
+}
+
+.mlx-panel__body--flush {
+  padding: 0;
+}
+
+/* ---------- Chart ---------- */
+
+.mlx-chart {
+  margin: 0;
+}
+
+.mlx-chart__canvas {
+  position: relative;
+  width: 100%;
+}
+
+.mlx-chart__canvas canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* Only a chart that drags something claims the touch; the rest scroll the page. */
+.mlx-chart__canvas--drag canvas {
+  touch-action: none;
+}
+
+
+/* ---------- Legend ---------- */
+
+.mlx-legend {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+}
+
+.mlx-legend--dense {
+  gap: var(--sp-2);
+}
+
+.mlx-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.mlx-legend__mark {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mlx-legend-colour);
+}
+
+.mlx-legend__mark[data-shape='square'] {
+  border-radius: 2px;
+}
+
+.mlx-legend__mark[data-shape='line'] {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.mlx-legend__mark[data-shape='dashed'] {
+  width: 16px;
+  height: 0;
+  border-radius: 0;
+  background: none;
+  border-top: 2px dashed var(--mlx-legend-colour);
+}
+
+.mlx-legend__mark[data-shape='ring'] {
+  background: none;
+  border: 2px solid var(--mlx-legend-colour);
+}
+
+.mlx-legend__mark[data-shape='triangle'] {
+  width: 0;
+  height: 0;
+  background: none;
+  border-radius: 0;
+  border-left: 5.5px solid transparent;
+  border-right: 5.5px solid transparent;
+  border-bottom: 10px solid var(--mlx-legend-colour);
+}
+
+.mlx-legend__mark[data-shape='cross'] {
+  background: none;
+  position: relative;
+}
+
+.mlx-legend__mark[data-shape='cross']::before,
+.mlx-legend__mark[data-shape='cross']::after {
+  content: '';
+  position: absolute;
+  inset: 4px -1px;
+  border-top: 2.2px solid var(--mlx-legend-colour);
+  border-radius: 2px;
+}
+
+.mlx-legend__mark[data-shape='cross']::before {
+  transform: rotate(45deg);
+}
+
+.mlx-legend__mark[data-shape='cross']::after {
+  transform: rotate(-45deg);
+}
+
+/* A ring with a plus inside: the centroid marker. */
+.mlx-legend__mark[data-shape='target'] {
+  background: none;
+  border: 2px solid var(--mlx-legend-colour);
+  position: relative;
+}
+
+.mlx-legend__mark[data-shape='target']::before {
+  content: '';
+  position: absolute;
+  inset: 4px 2px;
+  border-top: 2px solid var(--mlx-legend-colour);
+  border-radius: 0;
+}
+
+.mlx-legend__mark[data-shape='target']::after {
+  content: '';
+  position: absolute;
+  inset: 2px 4px;
+  border-left: 2px solid var(--mlx-legend-colour);
+  border-radius: 0;
+}
+
+/* ---------- Metrics ---------- */
+
+.mlx-metrics {
+  display: grid;
+  grid-template-columns: repeat(var(--mlx-metric-columns, auto-fit), minmax(120px, 1fr));
+  gap: var(--sp-2);
+}
+
+.mlx-metric {
+  padding: var(--sp-3);
+  border-radius: var(--radius);
+  background: var(--bg-secondary);
+  min-width: 0;
+}
+
+/* Inline, so a label that wraps keeps its info icon after the last word. */
+.mlx-metric__label {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+  text-wrap: balance;
+}
+
+.mlx-metric__label .mlx-tip {
+  margin-left: 4px;
+  vertical-align: -3px;
+}
+
+.mlx-metric__value {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  line-height: 1.15;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.mlx-metric__trend {
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+
+.mlx-metric__trend[data-dir='down'] {
+  color: var(--tone-good);
+}
+
+.mlx-metric__trend[data-dir='up'] {
+  color: var(--tone-warn);
+}
+
+.mlx-metric__caption {
+  margin-top: 3px;
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+.mlx-metric[data-tone='good'] .mlx-metric__value {
+  color: var(--tone-good);
+}
+
+.mlx-metric[data-tone='warn'] .mlx-metric__value {
+  color: var(--tone-warn);
+}
+
+.mlx-metric[data-tone='bad'] .mlx-metric__value {
+  color: var(--tone-bad);
+}
+
+.mlx-metric[data-tone='accent'] .mlx-metric__value {
+  color: var(--accent);
+}
+
+/* An empty metric reads as absent. Last, to beat the tone colours above. */
+.mlx-metric .mlx-metric__value[data-empty] {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+@keyframes mlx-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+/* ---------- Maths ---------- */
+
+.mlx-math {
+  color: var(--text-primary);
+}
+
+.mlx-math--display {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--sp-2) 0;
+}
+
+/* KaTeX inherits our type colours rather than shipping its own. */
+.katex {
+  font-size: 1.02em;
+  color: inherit;
+}
+
+.katex-display {
+  margin: 0;
+}
+
+.mlx-note {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* A compact table for comparing configurations. */
+.mlx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.mlx-table th,
+.mlx-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mlx-table th {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mlx-table td {
+  color: var(--text-secondary);
+}
+
+.mlx-table td:first-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.mlx-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.mlx-table__scroll {
+  overflow-x: auto;
+}
+
+/* A dense table for the output column: tight cells, a header that stays put. */
+.mlx-table--compact {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+
+.mlx-table--compact th,
+.mlx-table--compact td {
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.mlx-table--compact thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface);
+}
+
+.mlx-panel--fill .mlx-table__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .mlx-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Touch targets for the small controls. */
+  .mlx-segmented__item {
+    padding: 7px 10px;
+  }
+
+  .mlx-button--sm,
+  .mlx-select select {
+    min-height: 36px;
+  }
+
+  .mlx-slider {
+    height: 28px;
+  }
+
+  .mlx-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: -7px;
+  }
+
+  .mlx-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Full screen on a phone: a pinned, labelled Close pill. */
+  .mlx-panel--full .mlx-panel__expand {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+}

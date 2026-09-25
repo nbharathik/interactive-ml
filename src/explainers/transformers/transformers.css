@@ -1,0 +1,200 @@
+/* Attention and transformers: the typed probe, the head view's pickers, the head colours. */
+
+.mlx-tf-input {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.mlx-tf-input__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mlx-tf-input__field {
+  width: min(260px, 100%);
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.mlx-tf-input__field:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.mlx-tf-input__hint {
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}
+
+.mlx-tf-input__hint[data-error] {
+  color: var(--tone-bad);
+}
+
+/* The model view: one picture, a row per token, and a line under it saying what the open part does. */
+.mlx-tfa {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.mlx-tfa__stage.mlx-arch {
+  flex: 1 1 0;
+  min-height: 260px;
+}
+
+.mlx-tfa__stage:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.mlx-tfa__note {
+  flex: none;
+  margin: 0;
+  min-height: calc(3 * 1.45em);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.mlx-tfa__note strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.mlx-tf-head {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.mlx-tf-head__picks {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* A lesson's tag sits under the panel head; the pickers make room for it. */
+.mlx-panel[data-mlx-spot] .mlx-tf-head__picks {
+  margin-top: 26px;
+}
+
+.mlx-tf-head__picks .mlx-scalar {
+  border: 0;
+  align-items: center;
+}
+
+.mlx-tf-head__picks .mlx-scalar[data-tone='accent'] {
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+
+.mlx-tf-head__picks .mlx-scalar[data-tone='accent'] .mlx-scalar__label {
+  color: var(--text-primary);
+}
+
+.mlx-tf-head__sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--border);
+}
+
+.mlx-tf-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--viz-violet);
+}
+
+.mlx-tf-dot[data-head='1'] {
+  background: var(--viz-green);
+}
+
+.mlx-tf-dot[data-head='2'] {
+  background: var(--viz-pink);
+}
+
+.mlx-tf-dot[data-head='3'] {
+  background: var(--viz-yellow);
+}
+
+/* The second chart gets the larger share of the output column; the gallery shows as many rows as fit. */
+.mlx-studio__out .mlx-panel.mlx-panel--fill.mlx-tf-gallery {
+  flex: 2 0 auto;
+}
+
+.mlx-studio__out .mlx-panel--fill.mlx-tf-gallery .mlx-panel__body {
+  flex-basis: 44px;
+}
+
+.mlx-studio__out .mlx-panel--fill.mlx-tf-second .mlx-panel__body {
+  flex-basis: 88px;
+}
+
+.mlx-studio__out .mlx-panel.mlx-panel--fill.mlx-tf-second {
+  flex: 4 0 auto;
+}
+
+/* A vector as a strip of coloured cells in a card. */
+.mlx-tf-vecs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mlx-tf-vec {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 6px;
+}
+
+.mlx-tf-vec__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-secondary);
+}
+
+.mlx-tf-vec__cells {
+  display: grid;
+  gap: 1px;
+  height: 18px;
+}
+
+.mlx-tf-swatch {
+  display: inline-block;
+  min-width: 36px;
+  min-height: 16px;
+}
+
+.mlx-tf-table {
+  max-height: 260px;
+  overflow: auto;
+}
+
+.mlx-tf-table tr[data-dim] th {
+  color: var(--text-tertiary);
+}
+
+.mlx-tf-masked {
+  font-size: var(--fs-2xs);
+  color: var(--text-tertiary);
+}

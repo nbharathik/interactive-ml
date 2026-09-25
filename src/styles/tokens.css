@@ -1,0 +1,221 @@
+/* Design tokens, light and dark. Every canvas reads its colours from here via lib/viz/palette.ts. */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Chrome: light ---- */
+  --bg-primary: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-secondary: #f7f7f7;
+  --bg-tertiary: #ececec;
+  --bg-code: #f7f7f7;
+  --text-primary: #2b2b2b;
+  --text-secondary: #555555;
+  --text-tertiary: #757575;
+  --text-faint: #a8a8a8;
+  --text-code: #2b2b2b;
+
+  /* The hero and title bands: the page colour here, lifted in the dark theme. */
+  --band-bg: #ffffff;
+  --band-surface: #ffffff;
+  --band-soft: #f1f1f1;
+  --band-border: #e5e5e5;
+  --band-text: #2b2b2b;
+  --band-muted: #757575;
+  --band-scheme: light;
+  --ribbon-blend: multiply;
+
+  --accent: #0f7ea3;
+  --accent-hover: #0b6684;
+  --accent-light: rgba(15, 126, 163, 0.12);
+  --accent-contrast: #ffffff;
+
+  --border: #e5e5e5;
+  --border-light: #eeeeee;
+  --border-strong: #d0d0d0;
+
+  /* Elevation is a hairline. Only floating cards carry a drop. */
+  --shadow-sm: none;
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
+  --shadow-panel: none;
+
+  --tag-bg: #f1f1f1;
+  --tag-text: #2b2b2b;
+  --nav-bg: rgba(255, 255, 255, 0.9);
+
+  --tip-bg: #2b2b2b;
+  --tip-text: #ffffff;
+
+  --scrollbar-track: #f7f7f7;
+  --scrollbar-thumb: #d0d0d0;
+  --scrollbar-thumb-hover: #b3b3b3;
+
+  /* ---- Visualization palette: light ---- */
+  --viz-blue: #0f7ea3;
+  --viz-green: #1b9e6a;
+  --viz-orange: #f59322;
+  --viz-pink: #d63f9f;
+  --viz-red: #d93a3a;
+  --viz-cyan: #12b5c9;
+  --viz-yellow: #c99500;
+  --viz-violet: #7c3aed;
+  --viz-grid: #e5e5e5;
+  --viz-muted: #757575;
+  --viz-surface: #ffffff;
+  --viz-axis: #aaaaaa;
+  --viz-basin: #eef2f6;
+
+  /* Class / cluster ramps (categorical, max hue separation). */
+  --viz-class-a: #0f7ea3;
+  --viz-class-b: #f59322;
+  --viz-class-c: #1b9e6a;
+  --viz-class-d: #d63f9f;
+
+  /* Signed fields run orange (negative) to blue (positive). */
+  --viz-neg: #f59322;
+  --viz-pos: #0f7ea3;
+
+  /* ---- Tone: UI text that judges a number (good / warn / bad) ---- */
+  --tone-good: #157a4e;
+  --tone-warn: #b35c00;
+  --tone-bad: #c0392b;
+  --tone-good-bg: rgba(27, 158, 106, 0.14);
+  --tone-warn-bg: rgba(245, 147, 34, 0.16);
+  --tone-bad-bg: rgba(217, 58, 58, 0.14);
+
+  /* ---- Geometry ---- */
+  /* 4px is the canonical radius; only the switch track and scrollbars are round. */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius: 4px;
+  --radius-lg: 4px;
+  --radius-pill: 4px;
+  --radius-round: 999px;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-section: 5rem;
+
+  /* ---- Type ---- */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --fs-2xs: 0.6875rem;
+  --track-caps: 0.04em;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.5rem;
+  --fs-4xl: 4rem;
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.6;
+
+  /* ---- Layout ---- */
+  --measure: 70ch;
+  --app-width: 1280px;
+  /* The studio grows with a big screen; the columns share the extra width. */
+  --studio-width: clamp(1560px, 88vw, 2240px);
+  --header-height: 60px;
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+
+  --focus-ring: var(--accent);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* ---- Chrome: dark (neutral charcoal, no blue cast under the charts) ---- */
+  --bg-primary: #0b0b0b;
+  --bg-surface: #131313;
+  --bg-secondary: #181818;
+  --bg-tertiary: #232323;
+  --bg-code: #181818;
+  --text-primary: #ededed;
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #8a8a8a;
+  --text-faint: #5c5c5c;
+  --text-code: #ededed;
+
+  --band-bg: #151515;
+  --band-surface: #1b1b1b;
+  --band-soft: #262626;
+  --band-border: #2c2c2c;
+  --band-text: #f2f2f2;
+  --band-muted: #9c9c9c;
+  --band-scheme: dark;
+  --ribbon-blend: screen;
+
+  --accent: #4fa4c6;
+  --accent-hover: #6fb8d4;
+  --accent-light: rgba(79, 164, 198, 0.18);
+  --accent-contrast: #0b0b0b;
+
+  --border: #242424;
+  --border-light: #1c1c1c;
+  --border-strong: #363636;
+
+  --shadow-sm: none;
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.55);
+  --shadow-panel: none;
+
+  --tag-bg: #232323;
+  --tag-text: #ededed;
+  --nav-bg: rgba(11, 11, 11, 0.86);
+
+  --tip-bg: #f2f2f2;
+  --tip-text: #0b0b0b;
+
+  --scrollbar-track: #0b0b0b;
+  --scrollbar-thumb: #363636;
+  --scrollbar-thumb-hover: #4a4a4a;
+
+  /* ---- Visualization palette: dark ---- */
+  --viz-blue: #4fa4c6;
+  --viz-green: #5fd3a0;
+  --viz-orange: #ffa24a;
+  --viz-pink: #f45fd0;
+  --viz-red: #f4626f;
+  --viz-cyan: #7ae0ec;
+  --viz-yellow: #f2c94c;
+  --viz-violet: #b794ff;
+  --viz-grid: #242424;
+  --viz-muted: #8a8a8a;
+  --viz-surface: #131313;
+  --viz-axis: #5c5c5c;
+  --viz-basin: #15191d;
+
+  --viz-class-a: #4fa4c6;
+  --viz-class-b: #ffa24a;
+  --viz-class-c: #5fd3a0;
+  --viz-class-d: #f45fd0;
+
+  --viz-neg: #ffa24a;
+  --viz-pos: #4fa4c6;
+
+  --tone-good: #5fd3a0;
+  --tone-warn: #ffb27a;
+  --tone-bad: #ff7b86;
+  --tone-good-bg: rgba(95, 211, 160, 0.16);
+  --tone-warn-bg: rgba(255, 162, 74, 0.16);
+  --tone-bad-bg: rgba(244, 98, 111, 0.16);
+
+  --focus-ring: var(--accent);
+}

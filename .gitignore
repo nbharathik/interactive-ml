@@ -1,0 +1,13 @@
+node_modules
+dist
+.vite
+node_modules/.tmp
+*.tsbuildinfo
+tests/.build
+tests/.shots
+dev/*
+.claude/
+CLAUDE.md
+AGENTS.md
+.DS_Store
+*.local
