@@ -1961,22 +1961,14 @@ html[data-mlx-full] .mlx-studio {
   flex: none;
 }
 
-/* The readout: the symbol and its number for whatever the pointer is on, in the same place every time. */
+/* The readout, inside its fold: the symbol and its number for whatever the pointer is on. */
 .mlx-readout {
-  flex: none;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  min-height: 48px;
-  padding: 7px 10px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg-surface);
-  transition: border-color var(--dur-fast) var(--ease-out);
-}
-
-.mlx-readout[data-live] {
-  border-color: var(--accent);
+  min-height: 44px;
+  padding: 0 10px 7px;
+  font-family: var(--font-sans);
 }
 
 .mlx-readout__title {
@@ -2039,8 +2031,8 @@ html[data-mlx-full] .mlx-studio {
   color: var(--text-primary);
 }
 
-/* The settings behind the picture: one folded line, the rows on a click. */
-.mlx-setup {
+/* A fold at the foot of the column: one quiet line, the rows on a click. */
+.mlx-fold {
   flex: none;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -2049,7 +2041,7 @@ html[data-mlx-full] .mlx-studio {
   font-size: var(--fs-2xs);
 }
 
-.mlx-setup__summary {
+.mlx-fold__summary {
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -2059,26 +2051,26 @@ html[data-mlx-full] .mlx-studio {
   color: var(--text-tertiary);
 }
 
-.mlx-setup__summary::-webkit-details-marker {
+.mlx-fold__summary::-webkit-details-marker {
   display: none;
 }
 
-.mlx-setup__summary::before {
+.mlx-fold__summary::before {
   content: '▸';
   flex: none;
   font-size: 9px;
   transition: transform var(--dur-fast) var(--ease-out);
 }
 
-.mlx-setup[open] > .mlx-setup__summary::before {
+.mlx-fold[open] > .mlx-fold__summary::before {
   transform: rotate(90deg);
 }
 
-.mlx-setup__summary:hover {
+.mlx-fold__summary:hover {
   color: var(--text-primary);
 }
 
-.mlx-setup__label {
+.mlx-fold__label {
   flex: none;
   font-size: 9px;
   font-weight: 600;
@@ -2086,7 +2078,7 @@ html[data-mlx-full] .mlx-studio {
   text-transform: uppercase;
 }
 
-.mlx-setup__line {
+.mlx-fold__line {
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
@@ -2094,11 +2086,11 @@ html[data-mlx-full] .mlx-studio {
   color: var(--text-secondary);
 }
 
-.mlx-setup[open] .mlx-setup__line {
+.mlx-fold[open] .mlx-fold__line {
   display: none;
 }
 
-.mlx-setup__rows {
+.mlx-fold__rows {
   margin: 0;
   padding: 0 10px 7px;
   display: grid;
@@ -2106,21 +2098,21 @@ html[data-mlx-full] .mlx-studio {
   gap: 2px 10px;
 }
 
-.mlx-setup__row {
+.mlx-fold__row {
   display: contents;
 }
 
-.mlx-setup__row dt {
+.mlx-fold__row dt {
   color: var(--text-tertiary);
 }
 
-.mlx-setup__row dd {
+.mlx-fold__row dd {
   margin: 0;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-/* Under the strip while nothing is open: the page's reference, quiet. */
+/* Under the header while nothing is open: the page's reference, quiet. */
 .mlx-inspector__idle {
   flex: 0 1 auto;
   min-height: 0;
@@ -2153,13 +2145,16 @@ html[data-mlx-full] .mlx-studio {
   color: var(--text-tertiary);
 }
 
-/* The head and the foot stay put; the map of the model lives in one of them. */
+/* The head and the foot stay put: the map of the model on top, the folds at the bottom. */
 .mlx-inspector__head {
   flex: none;
 }
 
 .mlx-inspector__foot {
   flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-top: auto;
 }
 
@@ -3119,7 +3114,7 @@ html[data-mlx-full] .mlx-studio {
   }
 
   .mlx-studio:not([data-expanded]) .mlx-inspector__idle,
-  .mlx-studio:not([data-expanded]) .mlx-setup {
+  .mlx-studio:not([data-expanded]) .mlx-fold--setup {
     display: none;
   }
 
