@@ -1,0 +1,1 @@
+import{r as n}from"./react-BfbBqZvt.js";function d(t){const[e,c]=n.useState(null),o=n.useRef(t);o.current=t;const a=n.useCallback(u=>{c(r=>{const s=o.current,l=r&&r.source===s?r.value:s,f=typeof u=="function"?u(l):u;return{source:s,value:f}})},[]);return[e&&e.source===t?e.value:t,a]}export{d as u};

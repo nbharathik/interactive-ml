@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/interactive-ml/favicon.svg" />
+    <link rel="apple-touch-icon" href="/interactive-ml/logo.svg" />
+    <meta name="description" content="A neural network is a pile of logistic regressions with a non-linearity between the layers." />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Neural networks · Interactive ML</title>
+    <link rel="canonical" href="https://nbharathik.github.io/interactive-ml/explainer/neural-network" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Interactive ML" />
+    <meta property="og:title" content="Neural networks · Interactive ML" />
+    <meta property="og:description" content="A neural network is a pile of logistic regressions with a non-linearity between the layers." />
+    <meta property="og:url" content="https://nbharathik.github.io/interactive-ml/explainer/neural-network" />
+    <meta property="og:image" content="https://nbharathik.github.io/interactive-ml/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Neural networks · Interactive ML" />
+    <meta name="twitter:description" content="A neural network is a pile of logistic regressions with a non-linearity between the layers." />
+    <meta name="twitter:image" content="https://nbharathik.github.io/interactive-ml/og.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Apply the stored theme before first paint.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('mlx-theme');
+        } catch (e) {}
+        var theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        var meta = document.querySelector('meta[name=theme-color]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b0b0b' : '#ffffff');
+      })();
+    </script>
+    <script type="module" crossorigin src="/interactive-ml/assets/index-BlsqdFVa.js"></script>
+    <link rel="modulepreload" crossorigin href="/interactive-ml/assets/react-BfbBqZvt.js">
+    <link rel="modulepreload" crossorigin href="/interactive-ml/assets/router-20_z0ZFW.js">
+    <link rel="modulepreload" crossorigin href="/interactive-ml/assets/katex-BANMgRpx.js">
+    <link rel="stylesheet" crossorigin href="/interactive-ml/assets/katex-Dc30MaAj.css">
+    <link rel="stylesheet" crossorigin href="/interactive-ml/assets/index-DF_D0zXv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Interactive ML needs JavaScript enabled. The visualisations run entirely in your browser.</noscript>
+
+    <!-- The studio frame: painted on a deep link before React runs, and by the router while the chunk loads. -->
+    <template id="mlx-skeleton">
+      <div class="mlx-header" aria-hidden="true"></div>
+      <main class="mlx-main">
+        <div class="mlx-studio-page mlx-skeleton">
+          <section class="mlx-studio" data-wide="">
+            <header class="mlx-band mlx-studio__head"><span class="mlx-skeleton__bar"></span></header>
+            <div class="mlx-studio__bar">
+              <span class="mlx-skeleton__bar"></span>
+              <span class="mlx-skeleton__bar"></span>
+              <span class="mlx-skeleton__bar"></span>
+            </div>
+            <div class="mlx-studio__body">
+              <aside class="mlx-studio__rail"><div class="mlx-skeleton__block"></div></aside>
+              <div class="mlx-studio__stage"><div class="mlx-skeleton__block"></div></div>
+              <aside class="mlx-studio__out"><div class="mlx-skeleton__block"></div></aside>
+            </div>
+          </section>
+        </div>
+      </main>
+    </template>
+
+    <script>
+      // A deep link paints the frame and starts its chunk and fonts before the app boots.
+      (function () {
+        var target = window.location.pathname;
+        try {
+          target = sessionStorage.getItem('mlx-redirect') || target;
+        } catch (e) {}
+        var match = /\/explainer\/([^/?#]+)/.exec(target);
+        if (!match) return;
+        var template = document.getElementById('mlx-skeleton');
+        var root = document.getElementById('root');
+        if (template && root && 'content' in template) root.appendChild(template.content.cloneNode(true));
+        var preload = {"base":"/interactive-ml/","chunks":{"linear-regression":["assets/Page-DtxP3qKj.js","assets/useLesson-Et8jZ41g.js","assets/tex-D-7Yz0xC.js","assets/useEditable-BdXFhrEi.js"],"polynomial-regression":["assets/Page-BtI_wGw6.js","assets/useLesson-Et8jZ41g.js","assets/tex-D-7Yz0xC.js","assets/useEditable-BdXFhrEi.js"],"logistic-regression":["assets/Page-BzPQFH4g.js","assets/useLesson-Et8jZ41g.js","assets/tex-D-7Yz0xC.js","assets/useEditable-BdXFhrEi.js"],"k-means":["assets/Page-BOukPUqH.js","assets/useLesson-Et8jZ41g.js","assets/useEditable-BdXFhrEi.js"],"decision-tree":["assets/Page-BF8MCxNI.js","assets/useLesson-Et8jZ41g.js"],"neural-network":["assets/Page-DM6xyyer.js","assets/useLesson-Et8jZ41g.js","assets/tex-D-7Yz0xC.js"],"knn":["assets/Page-BV80YF9w.js","assets/useLesson-Et8jZ41g.js","assets/useEditable-BdXFhrEi.js"],"regularization":["assets/Page-BHxly4EH.js","assets/useLesson-Et8jZ41g.js","assets/usePresets-Dg089hMn.js"],"activation-functions":["assets/Page-BZAA-cc6.js","assets/useLesson-Et8jZ41g.js","assets/usePresets-Dg089hMn.js"],"cnn":["assets/Page-Bj01WTHM.js","assets/useLesson-Et8jZ41g.js","assets/tex-D-7Yz0xC.js"]},"fonts":["assets/KaTeX_Main-Regular-B22Nviop.woff2","assets/KaTeX_Math-Italic-t53AETM-.woff2"]};
+        if (!preload || !preload.chunks[match[1]]) return;
+        var head = document.head;
+        preload.chunks[match[1]].forEach(function (file) {
+          var link = document.createElement('link');
+          link.rel = 'modulepreload';
+          link.crossOrigin = '';
+          link.href = preload.base + file;
+          head.appendChild(link);
+        });
+        preload.fonts.forEach(function (file) {
+          var link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'font';
+          link.type = 'font/woff2';
+          link.crossOrigin = '';
+          link.href = preload.base + file;
+          head.appendChild(link);
+        });
+      })();
+    </script>
+  </body>
+</html>

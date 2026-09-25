@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://nbharathik.github.io/interactive-ml/</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/about</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/linear-regression</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/polynomial-regression</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/regularization</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/logistic-regression</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/knn</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/decision-tree</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/k-means</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/neural-network</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/activation-functions</loc></url>
+  <url><loc>https://nbharathik.github.io/interactive-ml/explainer/cnn</loc></url>
+</urlset>
